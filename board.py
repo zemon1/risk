@@ -18,11 +18,27 @@ class Board:
         #self.graph = nx.Graph()
         self.nxgraph = nx.house_graph()
 
+    def __str__(self):
+        str1 = ""
+        for key in self.graph.keys():
+            g = self.graph[key]
+            t = self.troops[key]
+            str1 += str(key)
+            str1 += ": "
+            str1 += str(g)
+            str1 += " - "
+            str1 += str(t)
+            str1 += str("\n")
+        return str1
+
     def importMap(self, fileName):
+
         countryCodeLoc = -1
         groupLoc = -1
+        bonus = -1
         
         #Read in the file and make a board.
+        
         with open(fileName, 'r') as theFile:
             lines = theFile.readlines()
 
@@ -42,6 +58,8 @@ class Board:
                             countryCodeLoc = i
                         elif item == "group":
                             groupLoc = i
+                        elif item == "bonus":
+                            bonus = i
                         else:
                             self.countries.append(item)
 
@@ -50,8 +68,9 @@ class Board:
                             self.nxgraph.add_node(i-1)
 
                 
-                print "CC:", countryCodeLoc
-                print "Group:", groupLoc
+                #print "CC:", countryCodeLoc
+                #print "Group:", groupLoc
+
                 #print "Graph:", self.graph
                 #print line
                 #print self.countries
@@ -69,7 +88,7 @@ class Board:
                         except KeyError:
                             self.groups[int(item)] = {"name":line[i+1], "list":[count], "bonus":[int(line[i+2])]}
                     
-                    elif i == groupLoc or i == groupLoc+1:
+                    elif i == groupLoc or i == bonus:
                         pass                       
                             
                     #These are the actual connections
@@ -89,9 +108,10 @@ class Board:
         
         #print "Graph:", self.nxgraph[14]
         for key in self.graph.keys():
-            print key, self.graph[key]
+            #print key, self.graph[key]
+            pass
             
-        print "\n"
+        #print "\n"
         #print "\n\n\n\n", self.groups
 
                      
@@ -121,6 +141,12 @@ class Board:
     def getTroops(self):
         return dc(self.troops)
 
+    def getCountries(self):
+        return dc(self.countries)
+
+    def getGroups(self):
+        return dc(self.groups)
+
     def setTroops(self, player, province, count):
         loc = self.troops[province]
 
@@ -130,9 +156,3 @@ class Board:
 if __name__ == "__main__":
     board = Board()
     board.importMap("topBot.csv")
-    ng = board.getBoard()
-
-    print ng[0]
-    ng[0] = []
-    print ng[0]
-    print board.graph[0]
