@@ -118,8 +118,15 @@ class Board:
     def getBoard(self):
         return dc(self.graph)
 
-    
-    
+    def getTroops(self):
+        return dc(self.troops)
+
+    def setTroops(self, player, province, count):
+        loc = self.troops[province]
+
+        loc["player"] = player
+        loc["count"] = count
+        
 if __name__ == "__main__":
     board = Board()
     board.importMap("topBot.csv")
